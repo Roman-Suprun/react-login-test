@@ -28,8 +28,10 @@ const LoginPage = (props) => {
                 password
             }, {withCredentials: true});
             const {id, accessToken, refreshToken} = result?.data;
-            // Cookies.set('accessToken',accessToken.toString());
-            // Cookies.set('refreshToken',refreshToken.toString());
+
+            Cookies.set('accessToken',accessToken.toString());
+            Cookies.set('refreshToken',refreshToken.toString());
+            Cookies.set('id',id.toString());
 
             dispatch(setAuthData({id, accessToken, refreshToken}))
         } catch (e) {
