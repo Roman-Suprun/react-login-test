@@ -1,10 +1,9 @@
-// import logo from './logo.svg';
 import {Link, useNavigate} from "react-router-dom";
-import * as routePath from "./consts/routePath";
+import * as routePath from "../../consts/routePath";
 import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 // import {toast} from "react-toastify";
-import Cube from "./MenuCube/Cube";
+import Cube from "../MenuCube/Cube";
 
 const StartPage = () => {
     const [isUserLogged, setIsUserLogged] = useState(false);

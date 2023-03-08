@@ -1,12 +1,13 @@
 import React, {useEffect, useRef, useState} from "react";
 import * as THREE from "three";
 import {FontLoader} from "three/examples/jsm/loaders/FontLoader";
-import * as routePath from "../consts/routePath";
+import * as routePath from "../../consts/routePath";
 import {useNavigate} from "react-router-dom";
 import {componentData} from "./menuData";
 import getCubeFrame from "./components/CubeFrame";
 import getMainScene from "./components/Scene";
 import getTextPlateComponentList from "./components/TextPlate";
+import * as projectTypes from "../../consts/projectTypes";
 
 const Cube = ({isVariantsVisible}) => {
     const canvasRef = useRef(null);
@@ -115,8 +116,13 @@ const Cube = ({isVariantsVisible}) => {
 
         getIntersects({
             event, onIntersectSuccess: (intersects) => {
-                if (intersects.object.customType === 'IQOS') {
-                    navigate(routePath.TO_DO_LIST_PAGE)
+                switch (intersects.object.customType) {
+                    case projectTypes.TO_DO_LIST :
+                        navigate(routePath.TO_DO_LIST_PAGE);
+                        break;
+                    case projectTypes.VILLA_D_ARSA :
+                        navigate(routePath.TO_DO_LIST_PAGE);
+                        break;
                 }
             }
         });

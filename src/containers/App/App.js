@@ -1,12 +1,12 @@
 import './App.css';
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import * as routePath from "./consts/routePath";
-import RegisterPage from "./RegisterPage";
-import UserInfoPage from "./UserInfoPage";
-import LoginPage from "./LoginPage";
-import TodoListPage from "./ToDoListPage/ToDoListPage";
+import * as routePath from "../../consts/routePath";
+import RegisterPage from "../RegisterPage/RegisterPage";
+import UserInfoPage from "../UserInfoPage/UserInfoPage";
+import LoginPage from "../LoginPage/LoginPage";
+import TodoListPage from "../ToDoListPage/ToDoListPage";
 import React from "react";
-import StartPage from "./StartPage";
+import StartPage from "../StartPage/StartPage";
 import {ToastContainer} from "react-toastify";
 
 const router = createBrowserRouter([

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import utils from "../utils/utils";
+import utils from "../../utils/utils";
 
 const TodoItem = ({todoItem, setTodoList, todoList, onTaskDelete}) => {
     const {id, text, subItems} = todoItem || {};

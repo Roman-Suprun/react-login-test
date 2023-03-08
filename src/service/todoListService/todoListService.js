@@ -1,6 +1,19 @@
 import Cookies from "js-cookie";
 import axios from "axios";
 import * as routePath from "../../consts/routePath";
+import config from "../../config/config";
+import * as serverMethods from '../../consts/serverMethods'
+
+const formatString = (string, ...values) => {
+    for (let i = 0; i < values.length; i++) {
+        string = string.replace(`{${i}}`, values[i]);
+    }
+
+    return string;
+};
+const getUrl = (path, params = []) => {
+    return config.serverHost + formatString(path, ...params);
+}
 
 const getUserInfo = async () => {
     try {
@@ -8,7 +21,8 @@ const getUserInfo = async () => {
         const userId = Cookies.get('id');
 
         if (userId && accessToken) {
-            const userInfo = await axios.get(`http://localhost:4000/userinfo/userId?id=${userId}`, {
+            // const userInfo = await axios.get(`http://localhost:4000/userinfo/userId?id=${userId}`, {
+            const userInfo = await axios.get(getUrl(serverMethods.GET_USER_INFO, [userId]), {
                 headers: {"x-access-token": accessToken}
             }, {withCredentials: true});
 
@@ -19,7 +33,7 @@ const getUserInfo = async () => {
 
         if (e.response.status === 401) {
             const currentRefreshToken = Cookies.get('refreshToken');
-            await axios.post('http://localhost:4000/refreshtoken', {
+            await axios.post(getUrl(serverMethods.REFRESH_TOKEN), {
                 refreshToken: currentRefreshToken,
             }, {withCredentials: true});
 
@@ -53,7 +67,7 @@ const setUserInfo = async ({name, surname, age}) => {
                 refreshToken: currentRefreshToken,
             }, {withCredentials: true});
 
-            return await setUserInfo()
+            return await setUserInfo({name, surname, age})
         }
     }
 }

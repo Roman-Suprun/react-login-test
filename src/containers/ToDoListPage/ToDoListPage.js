@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import utils from '../utils/utils';
-import todoListService from "../service/todoListService/todoListService";
+import utils from '../../utils/utils';
+import todoListService from "../../service/todoListService/todoListService";
 import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import cn from 'classnames';
-import * as routePath from "../consts/routePath";
+import * as routePath from "../../consts/routePath";
 import TodoList from "./ToDoList";
 
 const ToDoListPage = () => {

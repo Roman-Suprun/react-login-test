@@ -1,11 +1,11 @@
-import './App.css';
+import '../App/App.css';
 import React, {useCallback, useEffect, useState} from "react";
-import * as routePath from "./consts/routePath";
+import * as routePath from "../../consts/routePath";
 import {useNavigate} from "react-router-dom";
-import todoListService from "./service/todoListService/todoListService";
+import todoListService from "../../service/todoListService/todoListService";
 import Cookies from "js-cookie";
-import {removeAuthData} from "./state/auth";
-import {dispatch} from "./state/store";
+import {removeAuthData} from "../../state/auth";
+import {dispatch} from "../../state/store";
 import {toast} from "react-toastify";
 
 const UserInfoPage = () => {
@@ -41,9 +41,8 @@ const UserInfoPage = () => {
         if (changeMode) {
             await setInfo();
             await getInfo();
-            console.log('save')
         } else {
-            console.log('open edit')
+            //TODO: open edit action
         }
 
         setIsChangeMode(!changeMode)
