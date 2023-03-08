@@ -3,16 +3,10 @@ import axios from "axios";
 import * as routePath from "../../consts/routePath";
 import config from "../../config/config";
 import * as serverMethods from '../../consts/serverMethods'
+import utils from "../../utils/utils";
 
-const formatString = (string, ...values) => {
-    for (let i = 0; i < values.length; i++) {
-        string = string.replace(`{${i}}`, values[i]);
-    }
-
-    return string;
-};
 const getUrl = (path, params = []) => {
-    return config.serverHost + formatString(path, ...params);
+    return config.serverHost + utils.formatString(path, ...params);
 }
 
 const getUserInfo = async () => {
@@ -21,7 +15,6 @@ const getUserInfo = async () => {
         const userId = Cookies.get('id');
 
         if (userId && accessToken) {
-            // const userInfo = await axios.get(`http://localhost:4000/userinfo/userId?id=${userId}`, {
             const userInfo = await axios.get(getUrl(serverMethods.GET_USER_INFO, [userId]), {
                 headers: {"x-access-token": accessToken}
             }, {withCredentials: true});
@@ -48,7 +41,7 @@ const setUserInfo = async ({name, surname, age}) => {
         const userId = Cookies.get('id');
 
         if (userId && accessToken) {
-            const userInfo = await axios.post(`http://localhost:4000/setuserinfo/userId?id=${userId}`, {
+            const userInfo = await axios.post(getUrl(serverMethods.SET_USER_INFO, [userId]), {
                     name, surname, age
                 },
                 {
@@ -63,7 +56,7 @@ const setUserInfo = async ({name, surname, age}) => {
 
         if (e.response?.status === 401) {
             const currentRefreshToken = Cookies.get('refreshToken');
-            await axios.post('http://localhost:4000/refreshtoken', {
+            await axios.post(getUrl(serverMethods.REFRESH_TOKEN), {
                 refreshToken: currentRefreshToken,
             }, {withCredentials: true});
 
@@ -78,20 +71,17 @@ const getTodoListData = async (navigate) => {
 
     if (userId && accessToken) {
         try {
-            const todoListData = await axios.get(`http://localhost:4000/usertodolist/userid?id=${userId}`, {
+            const todoListData = await axios.get(getUrl(serverMethods.GET_USER_TODO_LIST, [userId]), {
                 headers: {"x-access-token": accessToken}
             }, {withCredentials: true});
 
-            // if (todoListData?.data?.data) {
-            //     setTodoList(todoListData?.data?.data);
-            // }
             return todoListData?.data?.data
         } catch (e) {
             console.log(e);
 
             if (e.response.status === 401) {
                 const currentRefreshToken = Cookies.get('refreshToken');
-                await axios.post('http://localhost:4000/refreshtoken', {
+                await axios.post(getUrl(serverMethods.REFRESH_TOKEN), {
                     refreshToken: currentRefreshToken,
                 }, {withCredentials: true});
 
@@ -109,7 +99,7 @@ const setTodoListData = async (navigate, todoList) => {
 
     if (userId && accessToken) {
         try {
-            await axios.post(`http://localhost:4000/updateusertodolist/userid?id=${userId}`, {
+            await axios.post(getUrl(serverMethods.UPDATE_USER_TODO_LIST, [userId]), {
                     data: JSON.stringify(todoList)
                 },
                 {
@@ -123,7 +113,7 @@ const setTodoListData = async (navigate, todoList) => {
 
             if (e?.response?.status === 401) {
                 const currentRefreshToken = Cookies.get('refreshToken');
-                await axios.post('http://localhost:4000/refreshtoken', {
+                await axios.post(getUrl(serverMethods.REFRESH_TOKEN), {
                     refreshToken: currentRefreshToken,
                 }, {withCredentials: true});
 

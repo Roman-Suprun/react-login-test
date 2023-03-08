@@ -8,6 +8,7 @@ import getCubeFrame from "./components/CubeFrame";
 import getMainScene from "./components/Scene";
 import getTextPlateComponentList from "./components/TextPlate";
 import * as projectTypes from "../../consts/projectTypes";
+import config from "../../config/config";
 
 const Cube = ({isVariantsVisible}) => {
     const canvasRef = useRef(null);
@@ -26,7 +27,7 @@ const Cube = ({isVariantsVisible}) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (res) => setFont(res));
+        fontLoader.load(config.threeJsFontUrl, (res) => setFont(res));
     }, []);
 
     const on3dComponentsLoad = () => {
