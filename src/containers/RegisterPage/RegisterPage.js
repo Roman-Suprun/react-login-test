@@ -25,7 +25,7 @@ const RegisterPage = (props) => {
             Cookies.remove('id');
             Cookies.remove('refreshToken');
             Cookies.remove('accessToken');
-            const result = await axios.post('http://localhost:4000/registration', {username, password}, {withCredentials: true});
+            const result = await axios.post('https://node-server-test-production.up.railway.app/registration', {username, password}, {withCredentials: true});
             const {id, isRegistered, accessToken, refreshToken} = result?.data;
 
             dispatch(setAuthData({id, accessToken, refreshToken}))

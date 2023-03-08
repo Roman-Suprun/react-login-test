@@ -22,7 +22,7 @@ const LoginPage = (props) => {
         event.preventDefault();
 
         try {
-            const result = await axios.post('http://localhost:4000/login', {
+            const result = await axios.post('https://node-server-test-production.up.railway.app/login', {
                 username,
                 password
             }, {withCredentials: true});
