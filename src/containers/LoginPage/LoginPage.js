@@ -9,6 +9,7 @@ import {createStructuredSelector} from "reselect";
 import * as routePath from "../../consts/routePath";
 import {Link, useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
+import config from "../../config/config";
 
 const mapStateToProps = createStructuredSelector({
     accessToken: makeSelectAccessToken(),
@@ -22,8 +23,8 @@ const LoginPage = (props) => {
         event.preventDefault();
 
         try {
-            const result = await axios.post('https://node-server-test-production.up.railway.app/login', {
-            // const result = await axios.post('https://localhost:4000/login', {
+            // const result = await axios.post('https://node-server-test-production.up.railway.app/login', {
+            const result = await axios.post(config.serverHost+'/login', {
                 username,
                 password
             }, {withCredentials: true});

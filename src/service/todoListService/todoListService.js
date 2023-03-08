@@ -26,9 +26,13 @@ const getUserInfo = async () => {
 
         if (e.response.status === 401) {
             const currentRefreshToken = Cookies.get('refreshToken');
-            await axios.post(getUrl(serverMethods.REFRESH_TOKEN), {
+            const response = await axios.post(getUrl(serverMethods.REFRESH_TOKEN), {
                 refreshToken: currentRefreshToken,
             }, {withCredentials: true});
+            const {accessToken, refreshToken} = response?.data;
+
+            Cookies.set('accessToken',accessToken.toString());
+            Cookies.set('refreshToken',refreshToken.toString());
 
             return await getUserInfo()
         }
@@ -56,9 +60,13 @@ const setUserInfo = async ({name, surname, age}) => {
 
         if (e.response?.status === 401) {
             const currentRefreshToken = Cookies.get('refreshToken');
-            await axios.post(getUrl(serverMethods.REFRESH_TOKEN), {
+            const response = await axios.post(getUrl(serverMethods.REFRESH_TOKEN), {
                 refreshToken: currentRefreshToken,
             }, {withCredentials: true});
+            const {accessToken, refreshToken} = response?.data;
+
+            Cookies.set('accessToken',accessToken.toString());
+            Cookies.set('refreshToken',refreshToken.toString());
 
             return await setUserInfo({name, surname, age})
         }
@@ -81,9 +89,13 @@ const getTodoListData = async (navigate) => {
 
             if (e.response.status === 401) {
                 const currentRefreshToken = Cookies.get('refreshToken');
-                await axios.post(getUrl(serverMethods.REFRESH_TOKEN), {
+                const response = await axios.post(getUrl(serverMethods.REFRESH_TOKEN), {
                     refreshToken: currentRefreshToken,
                 }, {withCredentials: true});
+                const {accessToken, refreshToken} = response?.data;
+
+                Cookies.set('accessToken',accessToken.toString());
+                Cookies.set('refreshToken',refreshToken.toString());
 
                 return await getTodoListData()
             } else {
@@ -113,9 +125,13 @@ const setTodoListData = async (navigate, todoList) => {
 
             if (e?.response?.status === 401) {
                 const currentRefreshToken = Cookies.get('refreshToken');
-                await axios.post(getUrl(serverMethods.REFRESH_TOKEN), {
+                const response = await axios.post(getUrl(serverMethods.REFRESH_TOKEN), {
                     refreshToken: currentRefreshToken,
                 }, {withCredentials: true});
+                const {accessToken, refreshToken} = response?.data;
+
+                Cookies.set('accessToken',accessToken.toString());
+                Cookies.set('refreshToken',refreshToken.toString());
 
                 await setTodoListData()
             } else {
