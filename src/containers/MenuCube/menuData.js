@@ -7,8 +7,8 @@ export const componentData = [
         coordinates: {x: 0, y: 0, z: 1, rx: 0, ry: 0, rz: 0}
     },
     {
-        text: 'Villa D\'Arsa',
-        type: projectTypes.VILLA_D_ARSA,
+        text: 'ADDAX',
+        type: projectTypes.ADDAX_CALENDAR,
         coordinates: {x: 1, y: 0, z: 0, rx: 0, ry: 1.571, rz: 0}
     },
     {

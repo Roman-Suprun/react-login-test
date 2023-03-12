@@ -5,9 +5,9 @@ import RegisterPage from "../RegisterPage/RegisterPage";
 import UserInfoPage from "../UserInfoPage/UserInfoPage";
 import LoginPage from "../LoginPage/LoginPage";
 import TodoListPage from "../ToDoListPage/ToDoListPage";
-import React from "react";
 import StartPage from "../StartPage/StartPage";
 import {ToastContainer} from "react-toastify";
+import AddaxCalendarPage from "../AddaxCalendarPage/AddaxCalendarPage";
 
 const router = createBrowserRouter([
     {
@@ -30,6 +30,10 @@ const router = createBrowserRouter([
     {
         path: routePath.TO_DO_LIST_PAGE,
         element: <TodoListPage/>,
+    },
+    {
+        path: routePath.ADDAX_CALENDAR,
+        element: <AddaxCalendarPage/>,
     },
 ]);
 

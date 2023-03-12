@@ -121,8 +121,8 @@ const Cube = ({isVariantsVisible}) => {
                     case projectTypes.TO_DO_LIST :
                         navigate(routePath.TO_DO_LIST_PAGE);
                         break;
-                    case projectTypes.VILLA_D_ARSA :
-                        navigate(routePath.TO_DO_LIST_PAGE);
+                    case projectTypes.ADDAX_CALENDAR :
+                        navigate(routePath.ADDAX_CALENDAR);
                         break;
                 }
             }

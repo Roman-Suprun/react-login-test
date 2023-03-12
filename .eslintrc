@@ -1,0 +1,49 @@
+{
+  "extends": ["react-app", "react-app/jest"],
+  "rules": {
+    "react/prop-types": 0,
+    "react/jsx-boolean-value": "error",
+    "react/self-closing-comp": "error",
+    "no-case-declarations": 0,
+    "react-hooks/exhaustive-deps": 0,
+    "prefer-const": "error",
+    "no-var": "error",
+    "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false }],
+    "object-shorthand": "error",
+    "no-debugger": "error",
+    "padding-line-between-statements": [
+      "error",
+      {"blankLine": "always", "prev": ["const", "let"], "next": "*"},
+      {"blankLine": "any", "prev": ["const", "let"], "next": ["const", "let"]}
+    ],
+    "import/no-anonymous-default-export": "off"
+  },
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.stories.*"],
+      "rules": {
+        "import/no-anonymous-default-export": "off"
+      }
+    },
+    {
+      "files": ["*.{ts,tsx}"],
+      "parser": "@typescript-eslint/parser",
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-unused-vars": ["error"]
+      }
+    }
+  ]
+}
