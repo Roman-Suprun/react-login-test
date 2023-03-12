@@ -13,13 +13,16 @@ import {
     getNewTask,
 } from './calendarService'
 import {ITaskDataObject, TDaysInMonth, TPublicHolidays} from "../../models/models";
-import api from "../../api";
 
 const StyledTable = styled.table`
   width: 1400px;
 `
 
-const Calendar: FC = () => {
+interface ICalendar {
+    publicHolidays: TPublicHolidays
+}
+
+const Calendar: FC<ICalendar> = ({publicHolidays}) => {
     const onDragEnd = ({source, destination}: DropResult) => {
         if (destination === undefined || destination === null) return null
         if (
@@ -89,17 +92,18 @@ const Calendar: FC = () => {
     const [isDataReady, setIsDataReady] = useState(false);
 
     const initCalendarData = async () => {
-        const publicHoliday: TPublicHolidays = await api.getPublicHoliday('2023', 'ua')
-        const {daysInMonth, initialTaskDataObject} = getInitialData(date, publicHoliday);
+        if (publicHolidays) {
+            const {daysInMonth, initialTaskDataObject} = getInitialData(date, publicHolidays);
 
-        setDaysInMonth(daysInMonth);
-        setTaskDataObject(initialTaskDataObject);
-        setIsDataReady(true);
+            setDaysInMonth(daysInMonth);
+            setTaskDataObject(initialTaskDataObject);
+            setIsDataReady(true);
+        }
     }
 
     useEffect(() => {
         initCalendarData();
-    }, [date])
+    }, [date, publicHolidays])
 
     const addNewTask = (id: string) => {
         taskDataObject[id].list.push(getNewTask());
