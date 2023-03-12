@@ -70,9 +70,9 @@ const getInitialData = (date: Date, publicHoliday: TPublicHolidays) => {
             id: uuid,
             date: formattedDate,
             list: i === 4 ? [
-                    {id: utils.getUuidv4(), content: "one"},
-                    {id: utils.getUuidv4(), content: "two"},
-                    {id: utils.getUuidv4(), content: "three"}
+                    {id: utils.getUuidv4(), isFixed: false,content: "one"},
+                    {id: utils.getUuidv4(), isFixed: false,content: "two"},
+                    {id: utils.getUuidv4(), isFixed: false,content: "three"}
                 ]
                 : listOfTasks
         }

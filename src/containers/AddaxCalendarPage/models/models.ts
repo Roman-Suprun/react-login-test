@@ -7,7 +7,7 @@ export type TDaysInMonth = IDayInMonth[]
 
 export type TListItem = {
     id: string
-    isFixed?: boolean
+    isFixed: boolean
     content: string
 }
 export type TList = TListItem[]
