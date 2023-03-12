@@ -35,6 +35,7 @@ const TodoItem = ({todoItem, setTodoList, todoList, onTaskDelete}) => {
         };
 
         const res = addTask(parentId, newTask, todoList)
+
         setTodoList(res);
         setIsNewTaskMode(!isNewTaskMode)
     };

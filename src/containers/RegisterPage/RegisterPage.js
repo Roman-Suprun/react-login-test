@@ -31,7 +31,8 @@ const RegisterPage = (props) => {
                 username,
                 password
             }, {withCredentials: true});
-            const {id, isRegistered, accessToken, refreshToken} = result?.data;
+            const {id, accessToken, refreshToken} = result?.data;
+
             Cookies.set('accessToken',accessToken.toString());
             Cookies.set('refreshToken',refreshToken.toString());
             Cookies.set('id',id.toString());

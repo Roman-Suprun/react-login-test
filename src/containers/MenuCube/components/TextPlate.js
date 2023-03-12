@@ -7,7 +7,7 @@ const createText = (font, text) => {
     const textGeometry = new TextGeometry(text, {
         height: 0,
         size: 0.2,
-        font: font,
+        font,
     });
     const textMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
     const textMesh = new THREE.Mesh(textGeometry, textMaterial);

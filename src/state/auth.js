@@ -41,5 +41,6 @@ export const clearUamAuthToken = (isHolder) => {
 export const removeAuthData = () => ({type: AUTH_SET_AUTH_DATA, payload: null});
 
 const selectAuth = (state) => state.auth;
+
 export const makeSelectAccessToken = () => createSelector(selectAuth, (authState) => authState.accessToken);
 export const makeSelectUserId = () => createSelector(selectAuth, (authState) => authState.id);

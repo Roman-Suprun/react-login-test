@@ -11,6 +11,7 @@ const formatString = (string, ...values) => {
 
     return string;
 };
+
 export default {
     getUuidv4,
     formatString,

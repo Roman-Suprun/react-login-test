@@ -80,6 +80,7 @@ const ToDoListPage = () => {
 
     const onTaskDelete = (id) => {
         const newList = removeTask(id, todoList);
+
         setTodoList(newList);
     };
 
