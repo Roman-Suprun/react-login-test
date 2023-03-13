@@ -1,10 +1,5 @@
 import utils from "../../../../utils/utils";
-import {TDaysInMonth, TList, TListItem, TPublicHolidays} from "../../models/models";
-
-// const getDays = (year, month) => {
-//     return new Date(year, month, 0).getDate();
-// };
-// const daysInSeptember = getDays(new Date().getFullYear(), 7);
+import {TDaysInMonth, TList, TListItem, TOnDrug, TPublicHolidays} from "../../models/models";
 
 const getFirstDayOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1);
 const getLastDayOfMonth = (date: Date) => new Date(
@@ -37,7 +32,7 @@ const getBlanksAfterLastDay = (date: Date) => {
 const getInitialData = (date: Date, publicHoliday: TPublicHolidays) => {
     const firstDayOfMonth = getFirstDayOfMonth(date)
     const lastDayOfMonth = getLastDayOfMonth(date);
-    const daysInMonth:TDaysInMonth = [];
+    const daysInMonth: TDaysInMonth = [];
 
     for (let i = 1; i <= lastDayOfMonth.getDate(); i++) {
         const getDate = () => {
@@ -49,13 +44,11 @@ const getInitialData = (date: Date, publicHoliday: TPublicHolidays) => {
             const year = dateObj.getFullYear();
             const month = String(dateObj.getMonth() + 1).padStart(2, "0");
             const day = String(dateObj.getDate()).padStart(2, "0");
-            const formattedDate = `${year}-${month}-${day}`;
 
-            return formattedDate;
+            return `${year}-${month}-${day}`;
         }
 
         const uuid = utils.getUuidv4()
-        // const uuid: string = i.toString()
         const formattedDate: string = getDate();
         const listOfTasks: TList = [];
 
@@ -70,9 +63,9 @@ const getInitialData = (date: Date, publicHoliday: TPublicHolidays) => {
             text: i.toString(),
             date: formattedDate,
             list: i === 4 ? [
-                    {id: utils.getUuidv4(), isFixed: false,content: "one"},
-                    {id: utils.getUuidv4(), isFixed: false,content: "two"},
-                    {id: utils.getUuidv4(), isFixed: false,content: "three"}
+                    {id: utils.getUuidv4(), isFixed: false, content: "one"},
+                    {id: utils.getUuidv4(), isFixed: false, content: "two"},
+                    {id: utils.getUuidv4(), isFixed: false, content: "three"}
                 ]
                 : listOfTasks
         });
@@ -90,6 +83,60 @@ const getNewTask = (text: string = 'New task...', isFixed: boolean = false): TLi
 const getNextMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 1)
 const getPreviousMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() - 1, 1)
 
+const getFilteredTask = (filter: string, daysInMonth: TDaysInMonth) => {
+    const daysInMonthCopy = [...daysInMonth];
+
+    if (filter !== '' && filter !== undefined) {
+        return daysInMonthCopy.map((dayItem) =>
+            ({
+                ...dayItem,
+                list: dayItem.list.filter((listItem) => listItem.content === filter)
+            })
+        )
+    } else {
+        return daysInMonthCopy
+    }
+}
+
+const onDrug = ({source, destination, daysInMonth}: TOnDrug) => {
+    if (destination === undefined || destination === null) return null
+    if (
+        source.droppableId === destination.droppableId &&
+        destination.index === source.index
+    ) {
+        return null
+    }
+
+    const start = daysInMonth.find((elem) => elem.id === source.droppableId);
+    const end = daysInMonth.find((elem) => elem.id === destination.droppableId);
+
+    if (!start || !end) return null;
+    if (start === end) {
+        const startColIndex = daysInMonth.findIndex((elem) => elem.id === start.id);
+        const newList = start.list.filter(
+            (_: any, idx: number) => idx !== source.index
+        )
+
+        newList?.splice(destination.index, 0, start.list[source.index])
+        daysInMonth[startColIndex].list = newList;
+
+        return daysInMonth
+    } else {
+        const startColIndex = daysInMonth.findIndex((elem) => elem.id === start.id);
+        const endColIndex = daysInMonth.findIndex((elem) => elem.id === end.id);
+        const newStartList = start.list.filter(
+            (_: any, idx: number) => idx !== source.index
+        )
+        const newEndList = end.list
+
+        newEndList.splice(destination.index, 0, start.list[source.index])
+        daysInMonth[startColIndex].list = newStartList;
+        daysInMonth[endColIndex].list = newEndList;
+
+        return daysInMonth
+    }
+}
+
 export {
     getBlanksBeforeFirstDay,
     getBlanksAfterLastDay,
@@ -99,5 +146,7 @@ export {
     getPreviousMonth,
     getInitialData,
     getNewTask,
+    getFilteredTask,
+    onDrug,
 }
 

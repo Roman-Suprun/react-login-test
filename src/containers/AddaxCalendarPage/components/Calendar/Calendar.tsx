@@ -11,29 +11,44 @@ import {
     getNextMonth,
     getPreviousMonth,
     getNewTask,
+    getFilteredTask,
+    onDrug,
 } from './calendarService'
-import {TCalendarData, TDaysInMonth, TPublicHolidays} from "../../models/models";
+import {TCalendarData, TDaysInMonth, TPublicHolidays, TOnDrug} from "../../models/models";
 
 const StyledTable = styled.table`
   width: 1400px;
 `
 
 const StyledNavButton = styled.button`
-      border-radius: 10px;
-      color: black;
-      width: max-content;
-      padding: 0 10px;
-      height: 30px;
-      background: rgb(238, 238, 238);
-    `
+  border-radius: 10px;
+  color: black;
+  width: max-content;
+  padding: 0 10px;
+  height: 30px;
+  background: rgb(238, 238, 238);
+`
 
 const StyledButtonsContainer = styled.div`
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      justify-content: center;
-      margin: 10px 0 20px;
-    `
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+  margin: 10px 0 20px;
+`
+
+const StyledFilterContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  margin: 30px auto 10px;
+`
+
+const StyledFilterInput = styled.input`
+  border: solid 1px white;
+  background: #374151;
+  color: white;
+`
 
 interface ICalendar {
     publicHolidays: TPublicHolidays
@@ -43,46 +58,9 @@ interface ICalendar {
 
 const Calendar: FC<ICalendar> = ({publicHolidays, setStoredCalendarData, storedCalendarData}) => {
     const onDragEnd = ({source, destination}: DropResult) => {
-        if (destination === undefined || destination === null) return null
-        if (
-            source.droppableId === destination.droppableId &&
-            destination.index === source.index
-        ) {
-            return null
-        }
+        const updatedDaysInMonth = onDrug({source, destination, daysInMonth} as TOnDrug)
 
-        const start = daysInMonth.find((elem) => elem.id === source.droppableId);
-        const end = daysInMonth.find((elem) => elem.id === destination.droppableId);
-
-        if (!start || !end) return null;
-        if (start === end) {
-            const startColIndex = daysInMonth.findIndex((elem) => elem.id === start.id);
-            const newList = start.list.filter(
-                (_: any, idx: number) => idx !== source.index
-            )
-
-            newList?.splice(destination.index, 0, start.list[source.index])
-            daysInMonth[startColIndex].list = newList;
-
-            setDaysInMonth(() => [...daysInMonth])
-
-            return null
-        } else {
-            const startColIndex = daysInMonth.findIndex((elem) => elem.id === start.id);
-            const endColIndex = daysInMonth.findIndex((elem) => elem.id === end.id);
-            const newStartList = start.list.filter(
-                (_: any, idx: number) => idx !== source.index
-            )
-            const newEndList = end.list
-
-            newEndList.splice(destination.index, 0, start.list[source.index])
-            daysInMonth[startColIndex].list = newStartList;
-            daysInMonth[endColIndex].list = newEndList;
-
-            setDaysInMonth(() => [...daysInMonth])
-
-            return null
-        }
+        if (updatedDaysInMonth) setDaysInMonth(() => [...updatedDaysInMonth])
     }
 
     const [date, setDate] = useState(new Date());
@@ -154,6 +132,10 @@ const Calendar: FC<ICalendar> = ({publicHolidays, setStoredCalendarData, storedC
         setIsDataReady(false);
     };
 
+    const onFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFilteredDaysInMonth(getFilteredTask(e.target.value, daysInMonth))
+    }
+
     const currentYear = date.getFullYear();
     const totalCellsLength = daysInMonth.length + blanksBeforeFirstDay.length + blanksAfterLastDay.length;
     const calendarWeekRowArray = [...Array(Math.ceil(totalCellsLength / 7))];
@@ -167,27 +149,10 @@ const Calendar: FC<ICalendar> = ({publicHolidays, setStoredCalendarData, storedC
                     <StyledNavButton onClick={handlePreviousMonth}>Previous Month</StyledNavButton>
                     <StyledNavButton onClick={handleNextMonth}>Next Month</StyledNavButton>
                 </StyledButtonsContainer>
-                <div>
+                <StyledFilterContainer>
                     <p>Filter by text</p>
-                    <input onChange={(e) => {
-                        const filter = e.target.value;
-                        const daysInMonthCopy = [...daysInMonth];
-
-                        if (filter !== '' && filter !== undefined) {
-                            const filtered = daysInMonthCopy.map((dayItem) =>
-                                ({
-                                    ...dayItem,
-                                    list: dayItem.list.filter((listItem) => listItem.content === filter)
-                                })
-                            )
-
-                            setFilteredDaysInMonth(filtered)
-                        } else {
-                            setFilteredDaysInMonth(daysInMonthCopy)
-                        }
-                    }
-                    }/>
-                </div>
+                    <StyledFilterInput type="text" onChange={onFilter}/>
+                </StyledFilterContainer>
                 <StyledTable>
                     <thead>
                     <tr>

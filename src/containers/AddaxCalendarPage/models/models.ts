@@ -1,3 +1,5 @@
+import {DraggableLocation} from "react-beautiful-dnd";
+
 export type TListItem = {
     id: string
     isFixed: boolean
@@ -28,3 +30,9 @@ export interface IPublicHoliday {
 }
 
 export type TPublicHolidays = IPublicHoliday[]
+
+export type TOnDrug = {
+    source: DraggableLocation
+    destination: DraggableLocation
+    daysInMonth: TDaysInMonth
+}
