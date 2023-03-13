@@ -23,16 +23,12 @@ const StyledList = styled.div`
   overflow: auto;
 `
 
-const TaskList: FC<ITaskList> = ({list, provided, dayId,addChangeTask}) => {
+const TaskList: FC<ITaskList> = ({list, provided, dayId, addChangeTask}) => {
 
     return (
         <StyledList {...provided.droppableProps} ref={provided.innerRef}>
-            {list.map((item, index) => {
-
-                return (
-                    <Task key={index} task={item} dayId={dayId} index={index} addChangeTask={addChangeTask}/>
-                )
-            })}
+            {list.map((item, index) => <Task key={item.id} task={item} dayId={dayId} index={index}
+                                             addChangeTask={addChangeTask}/>)}
             {provided.placeholder}
         </StyledList>
     )

@@ -2,10 +2,10 @@ import {Droppable} from 'react-beautiful-dnd'
 import styled from 'styled-components'
 import {FC} from "react";
 import TaskList from "./TaskList";
-import {ITaskItem} from "../models/models";
+import {IDayInMonth} from "../models/models";
 
 interface IDayProps {
-    taskItem: ITaskItem
+    taskItem: IDayInMonth
     day: number
     addNewTask: (id: string) => void
     addChangeTask: (dayId: string, id: string, text: string) => void
@@ -38,7 +38,7 @@ const Day: FC<IDayProps> = (props) => {
         <div>
             <div>{day}</div>
             <StyledAddTask onClick={() => addNewTask(id)}>+</StyledAddTask>
-            <Droppable droppableId={id.toString()}>
+            <Droppable droppableId={id}>
                 {provided => (
                     <StyledColumn>
                         <TaskList dayId={id} list={list} provided={provided} addChangeTask={addChangeTask}/>

@@ -1,6 +1,8 @@
 export interface IDayInMonth {
     id: string
     text: string
+    date: string
+    list: TList
 }
 
 export type TDaysInMonth = IDayInMonth[]
@@ -11,16 +13,6 @@ export type TListItem = {
     content: string
 }
 export type TList = TListItem[]
-
-export interface ITaskItem {
-    id: string
-    date: string
-    list: TList
-}
-
-export interface ITaskDataObject {
-    [key: string]: ITaskItem
-}
 
 export interface IPublicHoliday {
     counties: null

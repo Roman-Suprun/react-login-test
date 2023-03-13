@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import {TListItem} from "../models/models";
 
 interface ItemProps {
-    task:TListItem
+    task: TListItem
     dayId: string
     index: number
     addChangeTask: (dayId: string, id: string, text: string) => void
@@ -24,7 +24,7 @@ const StyledItem = styled.div`
   }
 `
 
-const Task: FC<ItemProps> = ({task:{id,isFixed,content}, index, dayId, addChangeTask}) => {
+const Task: FC<ItemProps> = ({task: {id, isFixed, content}, index, dayId, addChangeTask}) => {
     const [isEditMode, setIsEditMode] = useState(false);
 
     const onChangeConfirm = (text: string) => {
