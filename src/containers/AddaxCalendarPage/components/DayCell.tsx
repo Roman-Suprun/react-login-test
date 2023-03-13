@@ -24,7 +24,6 @@ const DayCell: FC<IDayCell> = (props) => {
     const dayOfMonth = (weekIndex * 7) + dayIndex + 1 - blanksBeforeFirstDay.length;
     const isEmptyDayCell = dayOfMonth < 1 || dayOfMonth > lastDayOfMonth.getDate()
     const taskItem = daysInMonth[dayOfMonth - 1]
-    // const key = daysInMonth[dayOfMonth - 1]?.id;
 
     return (
         <StyledTd key={`${weekIndex}-${dayIndex}`}>

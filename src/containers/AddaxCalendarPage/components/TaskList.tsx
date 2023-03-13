@@ -13,7 +13,6 @@ interface ITaskList {
 }
 
 const StyledList = styled.div`
-  //background-color: #ddd;
   border-radius: 8px;
   display: flex;
   flex-direction: column;

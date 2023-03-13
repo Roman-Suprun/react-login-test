@@ -12,17 +12,36 @@ import {
     getPreviousMonth,
     getNewTask,
 } from './calendarService'
-import {TDaysInMonth, TPublicHolidays} from "../../models/models";
+import {TCalendarData, TDaysInMonth, TPublicHolidays} from "../../models/models";
 
 const StyledTable = styled.table`
   width: 1400px;
 `
 
+const StyledNavButton = styled.button`
+      border-radius: 10px;
+      color: black;
+      width: max-content;
+      padding: 0 10px;
+      height: 30px;
+      background: rgb(238, 238, 238);
+    `
+
+const StyledButtonsContainer = styled.div`
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      justify-content: center;
+      margin: 10px 0 20px;
+    `
+
 interface ICalendar {
     publicHolidays: TPublicHolidays
+    storedCalendarData: TCalendarData
+    setStoredCalendarData: (calendarData: TCalendarData) => void
 }
 
-const Calendar: FC<ICalendar> = ({publicHolidays}) => {
+const Calendar: FC<ICalendar> = ({publicHolidays, setStoredCalendarData, storedCalendarData}) => {
     const onDragEnd = ({source, destination}: DropResult) => {
         if (destination === undefined || destination === null) return null
         if (
@@ -68,23 +87,47 @@ const Calendar: FC<ICalendar> = ({publicHolidays}) => {
 
     const [date, setDate] = useState(new Date());
     const lastDayOfMonth = getLastDayOfMonth(date);
+    const currentMonth = calendarData.MONTH_OF_YEAR[date.getMonth()];
     const [daysInMonth, setDaysInMonth] = useState<TDaysInMonth>([]);
+    const [filteredDaysInMonth, setFilteredDaysInMonth] = useState<TDaysInMonth>(daysInMonth);
     const blanksBeforeFirstDay = getBlanksBeforeFirstDay(date)
     const blanksAfterLastDay = getBlanksAfterLastDay(date)
     const [isDataReady, setIsDataReady] = useState(false);
+    const getStoredData = () => storedCalendarData[currentMonth] || [];
+
+    const saveCalendarData = () => {
+        if (getStoredData() !== daysInMonth) {
+            storedCalendarData[currentMonth.toString()] = daysInMonth;
+            setStoredCalendarData({...storedCalendarData});
+        }
+    }
+
+    useEffect(() => {
+        setFilteredDaysInMonth([]);
+    }, [date])
+
+    useEffect(() => {
+        saveCalendarData()
+    }, [daysInMonth])
 
     const initCalendarData = async () => {
-        if (publicHolidays) {
-            const {daysInMonth} = getInitialData(date, publicHolidays);
+        if (publicHolidays.length > 0) {
+            const storedData = getStoredData();
 
-            setDaysInMonth(daysInMonth);
+            if (storedData.length > 0) {
+                setDaysInMonth(storedData);
+            } else {
+                const {daysInMonth} = getInitialData(date, publicHolidays);
+
+                setDaysInMonth(daysInMonth);
+            }
             setIsDataReady(true);
         }
     }
 
     useEffect(() => {
         initCalendarData();
-    }, [date, publicHolidays])
+    }, [date, publicHolidays, storedCalendarData])
 
     const addNewTask = (id: string) => {
         const targetIndex = daysInMonth.findIndex((elem) => elem.id === id);
@@ -100,6 +143,7 @@ const Calendar: FC<ICalendar> = ({publicHolidays}) => {
         daysInMonth[targetDayIndex].list[targetTaskIndex].content = text;
         setDaysInMonth(() => [...daysInMonth])
     }
+
     const handlePreviousMonth = () => {
         setDate(getPreviousMonth(date));
         setIsDataReady(false);
@@ -110,7 +154,6 @@ const Calendar: FC<ICalendar> = ({publicHolidays}) => {
         setIsDataReady(false);
     };
 
-    const currentMonth = calendarData.MONTH_OF_YEAR[date.getMonth()];
     const currentYear = date.getFullYear();
     const totalCellsLength = daysInMonth.length + blanksBeforeFirstDay.length + blanksAfterLastDay.length;
     const calendarWeekRowArray = [...Array(Math.ceil(totalCellsLength / 7))];
@@ -119,8 +162,32 @@ const Calendar: FC<ICalendar> = ({publicHolidays}) => {
     return (
         isDataReady ?
             <DragDropContext onDragEnd={onDragEnd}>
-                {/*<DragDropContext onDragEnd={()=>{}}>*/}
                 <h2>{currentMonth} {currentYear}</h2>
+                <StyledButtonsContainer>
+                    <StyledNavButton onClick={handlePreviousMonth}>Previous Month</StyledNavButton>
+                    <StyledNavButton onClick={handleNextMonth}>Next Month</StyledNavButton>
+                </StyledButtonsContainer>
+                <div>
+                    <p>Filter by text</p>
+                    <input onChange={(e) => {
+                        const filter = e.target.value;
+                        const daysInMonthCopy = [...daysInMonth];
+
+                        if (filter !== '' && filter !== undefined) {
+                            const filtered = daysInMonthCopy.map((dayItem) =>
+                                ({
+                                    ...dayItem,
+                                    list: dayItem.list.filter((listItem) => listItem.content === filter)
+                                })
+                            )
+
+                            setFilteredDaysInMonth(filtered)
+                        } else {
+                            setFilteredDaysInMonth(daysInMonthCopy)
+                        }
+                    }
+                    }/>
+                </div>
                 <StyledTable>
                     <thead>
                     <tr>
@@ -133,7 +200,7 @@ const Calendar: FC<ICalendar> = ({publicHolidays}) => {
                     {calendarWeekRowArray.map((week, weekIndex) => (
                         <tr key={weekIndex}>
                             {calendarDayRowArray.map((day, dayIndex) => <DayCell key={dayIndex} dayIndex={dayIndex}
-                                                                                 daysInMonth={daysInMonth}
+                                                                                 daysInMonth={filteredDaysInMonth.length > 0 ? filteredDaysInMonth : daysInMonth}
                                                                                  lastDayOfMonth={lastDayOfMonth}
                                                                                  blanksBeforeFirstDay={blanksBeforeFirstDay}
                                                                                  addNewTask={addNewTask}
@@ -144,8 +211,6 @@ const Calendar: FC<ICalendar> = ({publicHolidays}) => {
                     ))}
                     </tbody>
                 </StyledTable>
-                <button onClick={handlePreviousMonth}>Previous Month</button>
-                <button onClick={handleNextMonth}>Next Month</button>
             </DragDropContext>
             : <></>
     )
