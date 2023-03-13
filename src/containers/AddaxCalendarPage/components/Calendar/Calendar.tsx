@@ -12,7 +12,7 @@ import {
     getPreviousMonth,
     getNewTask,
 } from './calendarService'
-import {ITaskDataObject, TDaysInMonth, TPublicHolidays} from "../../models/models";
+import {TDaysInMonth, TPublicHolidays} from "../../models/models";
 
 const StyledTable = styled.table`
   width: 1400px;
@@ -28,53 +28,39 @@ const Calendar: FC<ICalendar> = ({publicHolidays}) => {
         if (
             source.droppableId === destination.droppableId &&
             destination.index === source.index
-        )
+        ) {
             return null
+        }
 
-        const start = taskDataObject[source.droppableId]
-        const end = taskDataObject[destination.droppableId]
+        const start = daysInMonth.find((elem) => elem.id === source.droppableId);
+        const end = daysInMonth.find((elem) => elem.id === destination.droppableId);
 
+        if (!start || !end) return null;
         if (start === end) {
+            const startColIndex = daysInMonth.findIndex((elem) => elem.id === start.id);
             const newList = start.list.filter(
                 (_: any, idx: number) => idx !== source.index
             )
 
-            newList.splice(destination.index, 0, start.list[source.index])
+            newList?.splice(destination.index, 0, start.list[source.index])
+            daysInMonth[startColIndex].list = newList;
 
-            const newCol = {
-                id: start.id,
-                date: start.date,
-                list: newList
-            }
+            setDaysInMonth(() => [...daysInMonth])
 
-            setTaskDataObject(state => ({...state, [newCol.id]: newCol}))
             return null
         } else {
+            const startColIndex = daysInMonth.findIndex((elem) => elem.id === start.id);
+            const endColIndex = daysInMonth.findIndex((elem) => elem.id === end.id);
             const newStartList = start.list.filter(
                 (_: any, idx: number) => idx !== source.index
             )
-
-            const newStartCol = {
-                id: start.id,
-                date: start.date,
-                list: newStartList
-            }
-
             const newEndList = end.list
 
             newEndList.splice(destination.index, 0, start.list[source.index])
+            daysInMonth[startColIndex].list = newStartList;
+            daysInMonth[endColIndex].list = newEndList;
 
-            const newEndCol = {
-                id: end.id,
-                list: newEndList
-            }
-
-            // @ts-ignore
-            setTaskDataObject(state => ({
-                ...state,
-                [newStartCol.id]: newStartCol,
-                [newEndCol.id]: newEndCol
-            }))
+            setDaysInMonth(() => [...daysInMonth])
 
             return null
         }
@@ -82,21 +68,16 @@ const Calendar: FC<ICalendar> = ({publicHolidays}) => {
 
     const [date, setDate] = useState(new Date());
     const lastDayOfMonth = getLastDayOfMonth(date);
-
     const [daysInMonth, setDaysInMonth] = useState<TDaysInMonth>([]);
-    const [taskDataObject, setTaskDataObject] = useState<ITaskDataObject>({})
-
-    const [isTaskDataObjectUpdated, setIsTaskDataObjectUpdated] = useState(false);
     const blanksBeforeFirstDay = getBlanksBeforeFirstDay(date)
     const blanksAfterLastDay = getBlanksAfterLastDay(date)
     const [isDataReady, setIsDataReady] = useState(false);
 
     const initCalendarData = async () => {
         if (publicHolidays) {
-            const {daysInMonth, initialTaskDataObject} = getInitialData(date, publicHolidays);
+            const {daysInMonth} = getInitialData(date, publicHolidays);
 
             setDaysInMonth(daysInMonth);
-            setTaskDataObject(initialTaskDataObject);
             setIsDataReady(true);
         }
     }
@@ -106,19 +87,18 @@ const Calendar: FC<ICalendar> = ({publicHolidays}) => {
     }, [date, publicHolidays])
 
     const addNewTask = (id: string) => {
-        taskDataObject[id].list.push(getNewTask());
-        setTaskDataObject(taskDataObject)
-        setIsTaskDataObjectUpdated(!isTaskDataObjectUpdated)
+        const targetIndex = daysInMonth.findIndex((elem) => elem.id === id);
+
+        daysInMonth[targetIndex].list.push(getNewTask());
+        setDaysInMonth(prevState => [...daysInMonth])
     }
 
     const addChangeTask = (dayId: string, taskId: string, text: string) => {
-        const targetTaskId = taskDataObject[dayId].list.findIndex((item) => item.id === taskId);
-        const targetTask = taskDataObject[dayId].list[targetTaskId];
+        const targetDayIndex = daysInMonth.findIndex((elem) => elem.id === dayId);
+        const targetTaskIndex = daysInMonth[targetDayIndex].list.findIndex((elem) => elem.id === taskId);
 
-        targetTask.content = text;
-        taskDataObject[dayId].list.splice(targetTaskId, 1, targetTask);
-        setTaskDataObject(taskDataObject)
-        setIsTaskDataObjectUpdated(!isTaskDataObjectUpdated)
+        daysInMonth[targetDayIndex].list[targetTaskIndex].content = text;
+        setDaysInMonth(() => [...daysInMonth])
     }
     const handlePreviousMonth = () => {
         setDate(getPreviousMonth(date));
@@ -139,6 +119,7 @@ const Calendar: FC<ICalendar> = ({publicHolidays}) => {
     return (
         isDataReady ?
             <DragDropContext onDragEnd={onDragEnd}>
+                {/*<DragDropContext onDragEnd={()=>{}}>*/}
                 <h2>{currentMonth} {currentYear}</h2>
                 <StyledTable>
                     <thead>
@@ -155,7 +136,6 @@ const Calendar: FC<ICalendar> = ({publicHolidays}) => {
                                                                                  daysInMonth={daysInMonth}
                                                                                  lastDayOfMonth={lastDayOfMonth}
                                                                                  blanksBeforeFirstDay={blanksBeforeFirstDay}
-                                                                                 taskDataObject={taskDataObject}
                                                                                  addNewTask={addNewTask}
                                                                                  addChangeTask={addChangeTask}
                                                                                  weekIndex={weekIndex}/>
