@@ -8,7 +8,8 @@ interface IDayProps {
     taskItem: IDayInMonth
     day: number
     addNewTask: (id: string) => void
-    addChangeTask: (dayId: string, id: string, text: string) => void
+    deleteTask: (dayId:string, id:string) => void
+    updateTask: (dayId: string, id: string, text: string) => void
 
 }
 
@@ -32,7 +33,7 @@ const StyledAddTask = styled.button`
 `
 
 const Day: FC<IDayProps> = (props) => {
-    const {taskItem: {list, id}, day, addNewTask, addChangeTask} = props || {};
+    const {taskItem: {list, id}, day, addNewTask, deleteTask,updateTask} = props || {};
 
     return (
         <div>
@@ -41,7 +42,7 @@ const Day: FC<IDayProps> = (props) => {
             <Droppable droppableId={id}>
                 {provided => (
                     <StyledColumn>
-                        <TaskList dayId={id} list={list} provided={provided} addChangeTask={addChangeTask}/>
+                        <TaskList dayId={id} list={list} provided={provided} deleteTask={deleteTask} updateTask={updateTask}/>
                     </StyledColumn>
                 )}
             </Droppable>

@@ -16,11 +16,12 @@ interface IDayCell {
     daysInMonth: TDaysInMonth
     blanksBeforeFirstDay: number[]
     addNewTask: (id: string) => void
-    addChangeTask: (dayId: string, id: string, text: string) => void
+    deleteTask: (dayId:string, id:string) => void
+    updateTask: (dayId: string, id: string, text: string) => void
 }
 
 const DayCell: FC<IDayCell> = (props) => {
-    const {blanksBeforeFirstDay, lastDayOfMonth, weekIndex, dayIndex, daysInMonth, addNewTask, addChangeTask} = props;
+    const {blanksBeforeFirstDay, lastDayOfMonth, weekIndex, dayIndex, daysInMonth, addNewTask, deleteTask,updateTask} = props;
     const dayOfMonth = (weekIndex * 7) + dayIndex + 1 - blanksBeforeFirstDay.length;
     const isEmptyDayCell = dayOfMonth < 1 || dayOfMonth > lastDayOfMonth.getDate()
     const taskItem = daysInMonth[dayOfMonth - 1]
@@ -29,7 +30,7 @@ const DayCell: FC<IDayCell> = (props) => {
         <StyledTd key={`${weekIndex}-${dayIndex}`}>
             {
                 !isEmptyDayCell &&
-                <Day taskItem={taskItem} day={dayOfMonth} addNewTask={addNewTask} addChangeTask={addChangeTask}/>
+                <Day taskItem={taskItem} day={dayOfMonth} addNewTask={addNewTask} deleteTask={deleteTask} updateTask={updateTask}/>
             }
         </StyledTd>
     )

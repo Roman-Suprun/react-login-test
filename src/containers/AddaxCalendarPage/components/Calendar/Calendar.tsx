@@ -114,7 +114,15 @@ const Calendar: FC<ICalendar> = ({publicHolidays, setStoredCalendarData, storedC
         setDaysInMonth(prevState => [...daysInMonth])
     }
 
-    const addChangeTask = (dayId: string, taskId: string, text: string) => {
+    const deleteTask = (dayId: string, taskId: string) => {
+        const targetDayIndex = daysInMonth.findIndex((elem) => elem.id === dayId);
+        const targetTaskIndex = daysInMonth[targetDayIndex].list.findIndex((elem) => elem.id === taskId);
+
+        daysInMonth[targetDayIndex].list.splice(targetTaskIndex,1);
+        setDaysInMonth(() => [...daysInMonth])
+    }
+
+    const updateTask = (dayId: string, taskId: string, text: string) => {
         const targetDayIndex = daysInMonth.findIndex((elem) => elem.id === dayId);
         const targetTaskIndex = daysInMonth[targetDayIndex].list.findIndex((elem) => elem.id === taskId);
 
@@ -169,7 +177,8 @@ const Calendar: FC<ICalendar> = ({publicHolidays, setStoredCalendarData, storedC
                                                                                  lastDayOfMonth={lastDayOfMonth}
                                                                                  blanksBeforeFirstDay={blanksBeforeFirstDay}
                                                                                  addNewTask={addNewTask}
-                                                                                 addChangeTask={addChangeTask}
+                                                                                 deleteTask={deleteTask}
+                                                                                 updateTask={updateTask}
                                                                                  weekIndex={weekIndex}/>
                             )}
                         </tr>

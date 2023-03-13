@@ -8,8 +8,8 @@ interface ITaskList {
     list: TList
     provided: DroppableProvided
     dayId: string
-    addChangeTask: (dayId: string, id: string, text: string) => void
-
+    updateTask: (dayId: string, id: string, text: string) => void
+    deleteTask: (dayId:string, id:string) => void
 }
 
 const StyledList = styled.div`
@@ -22,12 +22,12 @@ const StyledList = styled.div`
   overflow: auto;
 `
 
-const TaskList: FC<ITaskList> = ({list, provided, dayId, addChangeTask}) => {
+const TaskList: FC<ITaskList> = ({list, provided, dayId, updateTask, deleteTask}) => {
 
     return (
         <StyledList {...provided.droppableProps} ref={provided.innerRef}>
             {list.map((item, index) => <Task key={item.id} task={item} dayId={dayId} index={index}
-                                             addChangeTask={addChangeTask}/>)}
+                                             updateTask={updateTask} deleteTask={deleteTask}/>)}
             {provided.placeholder}
         </StyledList>
     )

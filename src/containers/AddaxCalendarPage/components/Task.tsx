@@ -7,7 +7,8 @@ interface ItemProps {
     task: TListItem
     dayId: string
     index: number
-    addChangeTask: (dayId: string, id: string, text: string) => void
+    updateTask: (dayId: string, id: string, text: string) => void
+    deleteTask: (dayId:string, id:string) => void
 }
 
 const StyledItem = styled.div`
@@ -24,11 +25,16 @@ const StyledItem = styled.div`
   }
 `
 
-const Task: FC<ItemProps> = ({task: {id, isFixed, content}, index, dayId, addChangeTask}) => {
+const Task: FC<ItemProps> = ({task: {id, isFixed, content}, index, dayId, updateTask, deleteTask}) => {
     const [isEditMode, setIsEditMode] = useState(false);
 
     const onChangeConfirm = (text: string) => {
-        addChangeTask(dayId, id, text)
+        updateTask(dayId, id, text)
+        setIsEditMode(false)
+    }
+
+    const onDeleteConfirm = () => {
+        deleteTask(dayId, id)
         setIsEditMode(false)
     }
 
@@ -42,7 +48,7 @@ const Task: FC<ItemProps> = ({task: {id, isFixed, content}, index, dayId, addCha
                 >
                     {
                         isEditMode
-                            ? <Input text={content} setIsEditMode={setIsEditMode} onChangeConfirm={onChangeConfirm}/>
+                            ? <Input text={content} onChangeConfirm={onChangeConfirm} onDeleteConfirm={onDeleteConfirm}/>
                             : <div onClick={() => setIsEditMode(!isFixed)}>{content}</div>
                     }
                 </StyledItem>
@@ -80,18 +86,18 @@ const StyledInput = styled.div`
 
 interface IInput {
     text: string,
-    setIsEditMode: (isEdit: boolean) => void,
     onChangeConfirm: (text: string) => void
+    onDeleteConfirm: () => void
 }
 
-const Input: FC<IInput> = ({text, setIsEditMode, onChangeConfirm}) => {
+const Input: FC<IInput> = ({text, onChangeConfirm, onDeleteConfirm}) => {
     const [currentText, setCurrentText] = useState(text);
 
     return (
         <StyledInput>
             <input value={currentText} onChange={(e) => setCurrentText(e.target.value)}/>
             <button onClick={() => onChangeConfirm(currentText)}>&#10003;</button>
-            <button onClick={() => setIsEditMode(false)}>x</button>
+            <button onClick={onDeleteConfirm}>x</button>
         </StyledInput>
     )
 }
