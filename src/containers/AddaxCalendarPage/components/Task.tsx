@@ -14,7 +14,7 @@ const StyledItem = styled.div`
   color: black;
   background: #eee;
   border-radius: 4px;
-  padding: 4px 8px;
+  padding: 4px 6px;
   transition: background-color .8s ease-out;
   margin-top: 8px;
 
@@ -57,7 +57,25 @@ const StyledInput = styled.div`
   display: flex;
   flex-direction: row;
   padding: 0;
-  margin: 0;
+  margin: 0 auto;
+  gap: 5px;
+  flex: 1;
+  
+  input{
+    width: 100%;
+    padding-left: 10px;
+    flex:1
+  }
+  
+  button{
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    border: 1px solid grey;
+    border-radius: 5px;
+  }
 `
 
 interface IInput {
