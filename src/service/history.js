@@ -1,16 +1,15 @@
 import {createBrowserHistory} from 'history';
 
-let history
+let history;
 
 const getHistory = () => {
     if (!history) {
         history = createBrowserHistory({
-            basename: ''
+            basename: '',
         });
     }
 
     return history;
 };
-
 
 export default getHistory;

@@ -1,4 +1,4 @@
-import {createSelector} from "reselect";
+import {createSelector} from 'reselect';
 
 export const AUTH_SET_AUTH_DATA = 'app/auth/AUTH_SET_AUTH_DATA';
 export const AUTH_SET_UAM_TOKEN = 'app/auth/AUTH_SET_UAM_TOKEN';
@@ -18,7 +18,7 @@ export const auth = (state = getInitialData(), action) => {
         default:
             return state;
     }
-}
+};
 
 export const setAuthData = ({accessToken, refreshToken, id, expirationDate, isAnonymous}) => ({
     type: AUTH_SET_AUTH_DATA,

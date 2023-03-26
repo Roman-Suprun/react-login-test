@@ -1,4 +1,4 @@
-import history from './history'
+import history from './history';
 const forwardTo = (location) => history.getHistory().push(location);
 
 const forwardToNotFound = () => history.getHistory().push('*');

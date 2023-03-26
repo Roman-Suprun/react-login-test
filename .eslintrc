@@ -1,9 +1,12 @@
 {
   "extends": ["react-app", "react-app/jest"],
+  "plugins": ["simple-import-sort"],
   "rules": {
     "react/prop-types": 0,
     "react/jsx-boolean-value": "error",
     "react/self-closing-comp": "error",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
     "no-case-declarations": 0,
     "react-hooks/exhaustive-deps": 0,
     "prefer-const": "error",

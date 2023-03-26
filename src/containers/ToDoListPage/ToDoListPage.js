@@ -1,14 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigate} from "react-router-dom";
-import todoListService from "../../service/todoListService/todoListService";
-import {toast} from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import 'react-toastify/dist/ReactToastify.css';
+
 import cn from 'classnames';
-import * as routePath from "../../consts/routePath";
-import TodoList from "./ToDoList";
+import React, {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {toast} from 'react-toastify';
+
+import * as routePath from '../../consts/routePath';
+import todoListService from '../../service/todoListService/todoListService';
+import TodoList from './ToDoList';
 
 const ToDoListPage = () => {
-    const defaultTask = {id: 1, text: 'My first task...', completed: false, subItems: []}
+    const defaultTask = {id: 1, text: 'My first task...', completed: false, subItems: []};
     const [todoList, setTodoList] = useState([defaultTask]);
     const [isSaveInProgress, setIsSaveInProgress] = useState(false);
     const navigate = useNavigate();
@@ -17,13 +19,13 @@ const ToDoListPage = () => {
         setIsSaveInProgress(true);
         await todoListService.setTodoListData(navigate, todoList).then((res) => {
             if (res) {
-                toast("Updated successfully");
+                toast('Updated successfully');
             } else {
-                toast.error("Update failed");
+                toast.error('Update failed');
             }
             setIsSaveInProgress(false);
         });
-    }
+    };
 
     useEffect(() => {
         (async () => {
@@ -32,7 +34,7 @@ const ToDoListPage = () => {
             if (data) {
                 setTodoList(data);
             }
-        })()
+        })();
     }, []);
 
     // const addTask = (id, child, list) => list?.map((todoItem) => {
@@ -165,28 +167,37 @@ const ToDoListPage = () => {
     // };
 
     return (
-        <div className="flex flex-col items-center pt-10 min-h-screen">
-            <button className="absolute text-sm left-2 top-2 h-10 pointer p-2" onClick={() => {
-                navigate(routePath.HOME_PAGE)
-            }}>
+        <div className='flex flex-col items-center pt-10 min-h-screen'>
+            <button
+                className='absolute text-sm left-2 top-2 h-10 pointer p-2'
+                onClick={() => {
+                    navigate(routePath.HOME_PAGE);
+                }}
+            >
                 Home
             </button>
-            <button className="absolute right-2 top-2 bg-blue-500 w-14" onClick={() => {
-                navigate(routePath.USER_INFO_PAGE)
-            }}>
+            <button
+                className='absolute right-2 top-2 bg-blue-500 w-14'
+                onClick={() => {
+                    navigate(routePath.USER_INFO_PAGE);
+                }}
+            >
                 User
             </button>
-            <h1 className="text-3xl font-bold mb-8">To-Do List</h1>
-            <button className='ml-2 w-8 font-bold text-[20px] border-solid border-2 border-black rounded-md'
-                    onClick={() => setTodoList([...todoList, defaultTask])}>
+            <h1 className='text-3xl font-bold mb-8'>To-Do List</h1>
+            <button
+                className='ml-2 w-8 font-bold text-[20px] border-solid border-2 border-black rounded-md'
+                onClick={() => setTodoList([...todoList, defaultTask])}
+            >
                 +
             </button>
-            <div className="mt-8 w-full flex flex-col items-center">
-                <TodoList todoListData={todoList} setTodoList={setTodoList} onTaskDelete={onTaskDelete}/>
+            <div className='mt-8 w-full flex flex-col items-center'>
+                <TodoList todoListData={todoList} setTodoList={setTodoList} onTaskDelete={onTaskDelete} />
             </div>
-            <button onClick={isSaveInProgress ? () => {
-            } : onSave}
-                    className={cn('mt-10 bg-blue-500 text-white px-4 py-2 rounded', {'opacity-50': isSaveInProgress})}>
+            <button
+                onClick={isSaveInProgress ? () => {} : onSave}
+                className={cn('mt-10 bg-blue-500 text-white px-4 py-2 rounded', {'opacity-50': isSaveInProgress})}
+            >
                 Save my todo list
             </button>
         </div>

@@ -1,17 +1,12 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 const getMainScene = (ref, objectsToAddArray = []) => {
     const canvas = ref.current;
     const scene = new THREE.Scene();
 
-    scene.background = new THREE.Color("#282c34");
+    scene.background = new THREE.Color('#282c34');
 
-    const camera = new THREE.PerspectiveCamera(
-        75,
-        canvas?.clientWidth / canvas?.clientHeight,
-        1,
-        1000
-    );
+    const camera = new THREE.PerspectiveCamera(75, canvas?.clientWidth / canvas?.clientHeight, 1, 1000);
 
     camera.position.set(0, 0, 5);
 
@@ -22,9 +17,9 @@ const getMainScene = (ref, objectsToAddArray = []) => {
 
     objectsToAddArray.forEach((item) => {
         scene.add(item);
-    })
+    });
 
-    return {scene, camera, renderer, canvas}
+    return {scene, camera, renderer, canvas};
 };
 
 export default getMainScene;

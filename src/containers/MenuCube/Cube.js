@@ -1,14 +1,15 @@
-import React, {useEffect, useRef, useState} from "react";
-import * as THREE from "three";
-import {FontLoader} from "three/examples/jsm/loaders/FontLoader";
-import * as routePath from "../../consts/routePath";
-import {useNavigate} from "react-router-dom";
-import {componentData} from "./menuData";
-import getCubeFrame from "./components/CubeFrame";
-import getMainScene from "./components/Scene";
-import getTextPlateComponentList from "./components/TextPlate";
-import * as projectTypes from "../../consts/projectTypes";
-import config from "../../config/config";
+import React, {useEffect, useRef, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import * as THREE from 'three';
+import {FontLoader} from 'three/examples/jsm/loaders/FontLoader';
+
+import config from '../../config/config';
+import * as projectTypes from '../../consts/projectTypes';
+import * as routePath from '../../consts/routePath';
+import getCubeFrame from './components/CubeFrame';
+import getMainScene from './components/Scene';
+import getTextPlateComponentList from './components/TextPlate';
+import {componentData} from './menuData';
 
 const Cube = ({isVariantsVisible}) => {
     const canvasRef = useRef(null);
@@ -31,9 +32,9 @@ const Cube = ({isVariantsVisible}) => {
     }, []);
 
     const on3dComponentsLoad = () => {
-        setTextPlateComponentList(getTextPlateComponentList(font, componentData))
+        setTextPlateComponentList(getTextPlateComponentList(font, componentData));
         setCubeFrameComponent(getCubeFrame({isVariantsVisible}));
-    }
+    };
 
     useEffect(() => {
         if (font) {
@@ -43,11 +44,10 @@ const Cube = ({isVariantsVisible}) => {
 
     useEffect(() => {
         if (textPlateComponentList && cubeFrameComponent) {
-
             if (isVariantsVisible) {
                 textPlateComponentList.forEach((text3DItem) => {
                     cubeFrameComponent.add(text3DItem);
-                })
+                });
             }
 
             setTestScene(getMainScene(canvasRef, [cubeFrameComponent]));
@@ -70,29 +70,31 @@ const Cube = ({isVariantsVisible}) => {
             onIntersectSuccess(intersects[0]);
         } else {
             if (typeof onIntersectFalse === 'function') {
-                onIntersectFalse()
+                onIntersectFalse();
             }
         }
-    }
+    };
 
     const onMouseMove = (event) => {
         getIntersects({
-            event, onIntersectSuccess: (intersects) => {
+            event,
+            onIntersectSuccess: (intersects) => {
                 intersects.object.material = new THREE.MeshBasicMaterial({color: 0xffffff});
                 intersects.object.children[0].material = new THREE.MeshBasicMaterial({color: 0x000000});
                 intersects.object.checked = true;
-            }, onIntersectFalse: () => {
+            },
+            onIntersectFalse: () => {
                 cubeFrameComponent.children.forEach((textPlateItem) => {
                     textPlateItem.material = new THREE.MeshBasicMaterial({color: '#282c34'});
                     textPlateItem.children[0].material = new THREE.MeshBasicMaterial({
                         color: 0xffffff,
-                        side: THREE.DoubleSide
+                        side: THREE.DoubleSide,
                     });
                     textPlateItem.children[0].checked = false;
-                })
-            }
+                });
+            },
         });
-    }
+    };
 
     const handleMouseDown = (event) => {
         const {clientX, clientY} = event.touches ? event.touches[0] : event;
@@ -103,12 +105,12 @@ const Cube = ({isVariantsVisible}) => {
     };
 
     const handleMouseMove = (event) => {
-        onMouseMove(event)
+        onMouseMove(event);
 
         if (isDragging) {
             const {clientX, clientY} = event.touches ? event.touches[0] : event;
 
-            positionCalculate({x: clientX, y: clientY})
+            positionCalculate({x: clientX, y: clientY});
         }
     };
 
@@ -116,26 +118,28 @@ const Cube = ({isVariantsVisible}) => {
         setIsDragging(false);
 
         getIntersects({
-            event, onIntersectSuccess: (intersects) => {
+            event,
+            onIntersectSuccess: (intersects) => {
+                // eslint-disable-next-line default-case
                 switch (intersects.object.customType) {
-                    case projectTypes.TO_DO_LIST :
+                    case projectTypes.TO_DO_LIST:
                         navigate(routePath.TO_DO_LIST_PAGE);
                         break;
-                    case projectTypes.ADDAX_CALENDAR :
+                    case projectTypes.ADDAX_CALENDAR:
                         navigate(routePath.ADDAX_CALENDAR);
                         break;
                 }
-            }
+            },
         });
 
         cubeFrameComponent.children.forEach((text3DItem) => {
             text3DItem.material = new THREE.MeshBasicMaterial({color: '#282c34'});
             text3DItem.children[0].material = new THREE.MeshBasicMaterial({
                 color: 0xffffff,
-                side: THREE.DoubleSide
+                side: THREE.DoubleSide,
             });
             text3DItem.children[0].checked = false;
-        })
+        });
     };
 
     const positionCalculate = ({x, y}) => {
@@ -146,7 +150,7 @@ const Cube = ({isVariantsVisible}) => {
 
         cubeFrameComponent.rotation.y = previousRotation.y + deltaMove.x * 0.01;
         cubeFrameComponent.rotation.x = previousRotation.x + deltaMove.y * 0.01;
-    }
+    };
 
     useEffect(() => {
         if (testScene) {

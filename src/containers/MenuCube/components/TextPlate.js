@@ -1,8 +1,8 @@
-import {TextGeometry} from "three/addons/geometries/TextGeometry";
-import * as THREE from "three";
+import * as THREE from 'three';
+import {TextGeometry} from 'three/addons/geometries/TextGeometry';
 
 const createText = (font, text) => {
-    if (!font) return
+    if (!font) return;
 
     const textGeometry = new TextGeometry(text, {
         height: 0,
@@ -12,20 +12,23 @@ const createText = (font, text) => {
     const textMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
     const textMesh = new THREE.Mesh(textGeometry, textMaterial);
 
-    textGeometry.computeBoundingBox()
+    textGeometry.computeBoundingBox();
     textMesh.position.x = 0;
     textMesh.position.y = 0;
-    textMesh.position.z = .001;
-    textMesh.geometry.center()
+    textMesh.position.z = 0.001;
+    textMesh.geometry.center();
 
     return textMesh;
-}
+};
 const createPlate = (coordinates) => {
-    const {x, y, z, rx, ry, rz} = coordinates || {x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0}
+    const {x, y, z, rx, ry, rz} = coordinates || {x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0};
     const geometry = new THREE.PlaneGeometry(1.95, 0.5);
     const material = new THREE.MeshBasicMaterial({
-        color: '#282c34', transparent: true, opacity: 0.5,
-        depthWrite: false, side: THREE.DoubleSide
+        color: '#282c34',
+        transparent: true,
+        opacity: 0.5,
+        depthWrite: false,
+        side: THREE.DoubleSide,
     });
     const plane = new THREE.Mesh(geometry, material);
 
@@ -35,12 +38,12 @@ const createPlate = (coordinates) => {
     plane.rotation.x = rx;
     plane.rotation.y = ry;
     plane.rotation.z = rz;
-    plane.geometry.center()
+    plane.geometry.center();
 
     return plane;
-}
+};
 const create3DText = (font, data) => {
-    const {coordinates, text, type} = data || {}
+    const {coordinates, text, type} = data || {};
     const text3D = createText(font, text);
     const plate = createPlate(coordinates);
 
@@ -48,17 +51,17 @@ const create3DText = (font, data) => {
     plate.customType = type;
 
     return plate;
-}
+};
 const getTextPlateComponentList = (font, componentData) => {
-    if (!componentData) return []
+    if (!componentData) return [];
 
     const text3DListComponent = [];
 
     componentData.forEach((data) => {
         text3DListComponent.push(create3DText(font, data));
-    })
+    });
 
     return text3DListComponent;
-}
+};
 
-export default getTextPlateComponentList
+export default getTextPlateComponentList;
